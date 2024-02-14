@@ -18,11 +18,33 @@ const faqs = [
 export default function App() {
     return (
         <div>
-            <Accordion />
+            <Accordion data={faqs} />
         </div>
     );
 }
 
-function Accordion() {
-    return <div>TODO</div>;
+function Accordion({ data }) {
+    return (
+        <div className="accordion">
+            {data.map((item, index) => (
+                <AccordionItem
+                    num={index < 9 ? `0${index + 1}` : index + 1} // item[8] will be 09, item[9] will be 10
+                    title={item.title}
+                    text={item.text}
+                    key={index}
+                />
+            ))}
+        </div>
+    );
+}
+
+function AccordionItem({ num, title, text }) {
+    return (
+        <div className="item">
+            <p className="number">{num}</p>
+            <h2 className="title">{title}</h2>
+            <p className="icon">-</p>
+            <div className="content-box">{text}</div>
+        </div>
+    );
 }
