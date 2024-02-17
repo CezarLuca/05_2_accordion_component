@@ -25,31 +25,61 @@ export default function App() {
 }
 
 function Accordion({ data }) {
+    const [currentOpen, setCurrentOpen] = useState(null);
+
     return (
         <div className="accordion">
             {data.map((item, index) => (
                 <AccordionItem
-                    num={index < 9 ? `0${index + 1}` : index + 1} // item[8] will be 09, item[9] will be 10
+                    currentOpen={currentOpen}
+                    onSetCurrentOpen={setCurrentOpen}
+                    num={index}
                     title={item.title}
-                    text={item.text}
                     key={index}
-                />
+                >
+                    {item.text}
+                </AccordionItem>
             ))}
+
+            <AccordionItem
+                currentOpen={currentOpen}
+                onSetCurrentOpen={setCurrentOpen}
+                num={22}
+                title="Test 1"
+                key="test1"
+            >
+                <p>Allows React developers to:</p>
+                <ul>
+                    <li>Break UI into components</li>
+                    <li>Make components reusable</li>
+                    <li>Place state effeiciently</li>
+                </ul>
+            </AccordionItem>
         </div>
     );
 }
 
-function AccordionItem({ num, title, text }) {
-    const [isOpen, setIsOpen] = useState(false);
+function AccordionItem({
+    num,
+    title,
+    currentOpen,
+    onSetCurrentOpen,
+    children,
+}) {
+    const isOpen = num === currentOpen;
+    // console.log(isOpen, num, currentOpen);
+    // const [isOpen, setIsOpen] = useState(false);
+
+    function handleClick() {
+        onSetCurrentOpen(isOpen ? null : num);
+    }
     return (
-        <div
-            className={`item ${isOpen && "open"}`}
-            onClick={() => setIsOpen(!isOpen)}
-        >
-            <p className="number">{num}</p>
+        <div className={`item ${isOpen && "open"}`} onClick={handleClick}>
+            <p className="number">{num < 9 ? `0${num + 1}` : num + 1}</p>{" "}
+            <> {/* num[8] will be 09, num[9] will be 10 */} </>
             <h2 className="title">{title}</h2>
             <p className="icon">{isOpen ? "-" : "+"}</p>
-            {isOpen ? <div className="content-box">{text}</div> : null}
+            {isOpen ? <div className="content-box">{children}</div> : null}
         </div>
     );
 }
